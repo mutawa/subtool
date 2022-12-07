@@ -12,6 +12,14 @@
 int main(int argc, char** argv)
 {
 
+    TimeStamp t1(121015) ;
+    TimeStamp t2(120000);
+    int diff = t1 - t2;
+    t1 += diff;
+    std::cout << t1 << std::endl;
+
+    return 0;
+
     std::string file_name = argv[1];
     std::string contents = ReadFileContents(file_name);
     //std::cout << contents << std::endl;
