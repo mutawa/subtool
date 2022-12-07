@@ -12,22 +12,34 @@
 int main(int argc, char** argv)
 {
 
-    TimeStamp t1(121015) ;
+    /*TimeStamp t1(121015) ;
     TimeStamp t2(120000);
     int diff = t1 - t2;
     t1 += diff;
     std::cout << t1 << std::endl;
 
-    return 0;
-
+    return 0;*/
     std::string file_name = argv[1];
-    std::string contents = ReadFileContents(file_name);
+    std::string command = argv[2];
+    
+    if (command == "shift") {
+        std::string contents = ReadFileContents(file_name);
+        std::list<Line> lines = FindMatches(contents);
+        
+        //int shiftAmount = std::stoi(argv[3]);
+        //Shift(lines, shiftAmount);
+        /*for(auto const& l : lines) {
+            std::cout << l;
+        }*/
+
+        int lineNumber = std::stoi(argv[3]);
+        TimeStamp correctTime(argv[4]);
+        Shift(lines, lineNumber, correctTime);
+
+    }
+
     //std::cout << contents << std::endl;
 
-    std::list<Line> lines = FindMatches(contents);
-    for(auto const& l : lines) {
-        std::cout << l;
-    }
     
     // std::cout << "t2 = " << t2.ToString() << std::endl;
     

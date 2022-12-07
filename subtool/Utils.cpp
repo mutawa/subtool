@@ -22,7 +22,7 @@ std::string ReadFileContents(std::string file_path) {
 std::list<Line> FindMatches(const std::string& text) {
     std::list<Line> lines;
     //std::regex reg("(\\d+)(?:\\r|\\n)+(\\d{2}:\\d{2}:\\d{2}.\\d{3}) --> (\\d{2}:\\d{2}:\\d{2}.\\d{3})(?:\\r|\\n)+(.*?)(?:\\r|\\n)+");
-    std::regex reg("(\\d+)(?:\\r\\n)(\\d{2}:\\d{2}:\\d{2}.\\d{3}) --> (\\d{2}:\\d{2}:\\d{2}.\\d{3})(?:\\r\\n)([\\s\\S]*?)\\r\\n\\r\\n");
+    std::regex reg("(\\d+)(?:\\r?\\n)(\\d{2}:\\d{2}:\\d{2}.\\d{3}) --> (\\d{2}:\\d{2}:\\d{2}.\\d{3})(?:\\r?\\n)([\\s\\S]*?)\\r?\\n\\r?\\n");
     std::sregex_iterator currentMatch(text.begin(), text.end(), reg);
     std::sregex_iterator lastMatch;
     while(currentMatch != lastMatch) {
@@ -36,4 +36,29 @@ std::list<Line> FindMatches(const std::string& text) {
     }
     return lines;
 
+}
+
+void Shift(std::list<Line>& lines, int milliSeconds)
+{
+    for (auto& l : lines) {
+        l.Shift(milliSeconds);
+    }
+}
+
+void Shift(std::list<Line>& lines, int lineNumber, TimeStamp correctTime)
+{
+    Line aLine;
+    bool found = false;
+    for (auto const& l : lines) {
+        if (l.lineNumber == lineNumber) {
+            aLine = l;
+            found = true;
+            break;
+        }
+    }
+
+    // todo: check if found
+    if (found) {
+        std::cout << "Timestamp of line " << lineNumber << " in file is " << aLine.from << std::endl;
+    }
 }

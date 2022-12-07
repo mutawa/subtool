@@ -7,6 +7,12 @@ Line::Line(int ln, const std::string& ts_from, const std::string& ts_to, const s
     text = line_text;
 }
 
+void Line::Shift(int milliSeconds)
+{
+    from += milliSeconds;
+    to += milliSeconds;
+}
+
 std::ostream& operator<<(std::ostream& out, const Line& line) {
     out << line.lineNumber << std::endl;
     out << line.from << " --> " << line.to << std::endl;
