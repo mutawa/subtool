@@ -60,5 +60,15 @@ void Shift(std::list<Line>& lines, int lineNumber, TimeStamp correctTime)
     // todo: check if found
     if (found) {
         std::cout << "Timestamp of line " << lineNumber << " in file is " << aLine.from << std::endl;
+        int diff = correctTime - aLine.from;
+        if(diff == 0) {
+            std::cout << "No shifting required";
+        } else {
+            TimeStamp shift(diff);
+            // std::cout << "Shifting all lines by " << shift;  // todo: negative time displayed wrongly
+            std::cout << "Shifting all lines by " << diff << " milliseconds." << std::endl;
+            Shift(lines, diff);
+        }
+
     }
 }
