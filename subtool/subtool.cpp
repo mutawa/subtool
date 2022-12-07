@@ -2,9 +2,28 @@
 //
 
 #include <iostream>
+#include <string>
 
-int main()
+#include "TimeStamp.h"
+#include "Utils.h"
+
+
+
+int main(int argc, char** argv)
 {
+
+    std::string file_name = argv[1];
+    std::string contents = ReadFileContents(file_name);
+    //std::cout << contents << std::endl;
+
+    std::list<Line> lines = FindMatches(contents);
+    for(auto const& l : lines) {
+        std::cout << l;
+    }
+    
+    // std::cout << "t2 = " << t2.ToString() << std::endl;
+    
+
     std::cout << "Hello World!\n";
 }
 

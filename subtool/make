@@ -1,0 +1,6 @@
+
+g++ -o bin/subtool subtool.cpp TimeStamp.cpp Utils.cpp Line.cpp
+if [ "$?" -eq 0 ]
+then bin/subtool ~/Downloads/village.srt
+fi
+
