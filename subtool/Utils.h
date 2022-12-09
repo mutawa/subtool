@@ -5,9 +5,14 @@
 #include "Line.h"
 #include <list>
 
-std::string ReadFileContents(std::string file_name);
+using std::string;
+using std::list;
 
-std::list<Line> ParseFileToLines(const std::string& text);
 
-void Shift(std::list<Line>& lines, int milliSeconds);
-void Shift(std::list<Line>& lines, int lineNumber, TimeStamp correctTime);
+string ReadFileContents(string file_name);
+
+list<Line> ParseFileToLines(const string& text);
+
+void WriteOutput(list<Line>* lines, const string& file_name);
+void Shift(list<Line>* lines, int milliSeconds);
+void Shift(list<Line>* lines, int lineNumber, TimeStamp* correctTime);

@@ -16,10 +16,11 @@ void usage(char *argv0) {
     cout << "Usage: " << argv0
          << " [-l anchorLine]"
          << " [-n syncMilliSeconds]"
+         << " [-o output_filename]"
          << " [-s shiftMilliSeconds]"
          << " [-t timeStamp]"
          << " [-u]"
-         << " file"
+         << " subtitles_file"
          << endl;
          exit(0);
 }
@@ -35,13 +36,15 @@ int main(int argc, char** argv)
     bool doUtf = false;
     bool doShift = false;
     bool doSync = false;
+    bool outputSpecified = false;
     int lineNumber;
     TimeStamp* correctTime;
+    string output_file;
 
     string timeStampCorrect;
 
 
-    while((opt = getopt(argc, argv, "l:nst:u")) != -1) {
+    while((opt = getopt(argc, argv, "l:no:st:u")) != -1) {
         switch(opt) {
             case 'n':
                 doSync = true;
@@ -56,6 +59,10 @@ int main(int argc, char** argv)
                 break;
             case 'l':
                 lineNumber = atoi(optarg);
+                break;
+            case 'o':
+                outputSpecified = true;
+                output_file = optarg;
                 break;
             case 't':
                 correctTime = new TimeStamp(optarg);
@@ -72,13 +79,17 @@ int main(int argc, char** argv)
         usage(argv[0]);
     }
 
+
     string file_name = argv[optind];
+    if(!outputSpecified) output_file = file_name;
     
     std::list<Line> lines = ParseFileToLines(file_name);
 
     if(doShift) {
-        Shift(lines, lineNumber, (*correctTime));
+        Shift(&lines, lineNumber, correctTime);
     }
+
+    WriteOutput(&lines, output_file);
 
     delete correctTime;
 
