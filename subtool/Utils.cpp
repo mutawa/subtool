@@ -48,46 +48,77 @@ std::list<Line> ParseFileToLines(const std::string& file_name) {
 void ShiftLines(std::list<Line>* lines, const int& milliSeconds)
 {
     cout << "shift all lines by " << milliSeconds << " let's go" << endl;
+    int c = 0;
     for (auto& l : (*lines)) {
-        
+        cout << ++c << " - " << l.from ;
         l.Shift(milliSeconds);
+        cout << "  -->  " << l.from << endl;
     }
+}
+
+Line* FindLine(list<Line>* lines, int num) {
+    for (auto& l : (*lines)) {
+        if (l.lineNumber == num) {
+            return &l;
+        }
+    }
+
+    int min = (*lines).front().lineNumber;
+    int max = (*lines).back().lineNumber;
+
+    cout << "line [" << num << "] not found. Use numbers between " << min << " and " << max << "." << endl;
+    exit(0);
+    
+}
+
+void Sync(list<Line>* lines, int beginLineNumber, int endLineNumber, TimeStamp* endCorrectTime) {
+    Line* begin = FindLine(lines, beginLineNumber);
+    Line* end = FindLine(lines, endLineNumber);
+    
+    int correct = (*endCorrectTime).val();
+    int beginTimeStamp = (*begin).from.val();
+    int endTimeStamp = (*end).from.val();
+
+
+
+    cout << "start is at " << (*begin).from << " and end is at " << (*end).from << " which should end at " << (*endCorrectTime) << "." << endl;
+    int span = (*endCorrectTime).val() - (*end).from.val();
+    cout << "span difference between end and correct is " << span << " milliseconds" << endl;
+
+
+    int before = (*lines).back().from.val();
+    int c = 0;
+    for(auto& l : (*lines)) {
+        cout << ++c << " - ";
+        l.Sync(beginTimeStamp, endTimeStamp, correct);
+        
+    }
+
+    int after = (*lines).back().from.val();
+    float diff = after - before;
+    if(diff == 0) cout << "No change after sync" << endl;
+    else cout << "difference of " << std::fixed << std::setprecision(1) << (diff/1000) << " seconds" << endl;
+
 }
 
 void Shift(std::list<Line>* lines, int lineNumber, TimeStamp* correctTime)
 {
-    Line* aLine;
-    bool found = false;
-    for (auto& l : (*lines)) {
-        if (l.lineNumber == lineNumber) {
-            aLine = &l;
-            found = true;
-            break;
-        }
-    }
-
-    // todo: check if found
-    if (found) {
-        cout << "correct time must be " << correctTime << endl;
-        std::cout << "Timestamp of line " << lineNumber << " in file is " << (*aLine).from << std::endl;
-        int diff = (*correctTime) - (*aLine).from;
-        if(diff == 0) {
-            std::cout << "No shifting required";
-        } else {
-            TimeStamp shift(diff);
-            // std::cout << "Shifting all lines by " << shift;  // todo: negative time displayed wrongly
-            std::cout << "Shifting all lines by " << diff << " milliseconds." << std::endl;
-            ShiftLines(lines, diff);
-        }
-
-    }
-    else {
-        int min = (*lines).front().lineNumber;
-        int max = (*lines).back().lineNumber;
-
-        cout << "line [" << lineNumber << "] not found. Use number between " << min << " and " << max << "." << endl;
+    Line* aLine = FindLine(lines, lineNumber);
+   
+    
+    std::cout << "Timestamp of line " << lineNumber << " in file is " << (*aLine).from << std::endl;
+    int diff = (*correctTime) - (*aLine).from;
+    if(diff == 0) {
+        std::cout << "No shifting required" << endl;
         exit(0);
+    } else {
+        TimeStamp shift(diff);
+        // std::cout << "Shifting all lines by " << shift;  // todo: negative time displayed wrongly
+        std::cout << "Shifting all lines by " << diff << " milliseconds." << std::endl;
+        ShiftLines(lines, diff);
     }
+
+    
 }
 
 void WriteOutput(list<Line>* lines, const string& file_name) {

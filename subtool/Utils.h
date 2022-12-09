@@ -16,3 +16,5 @@ list<Line> ParseFileToLines(const string& text);
 void WriteOutput(list<Line>* lines, const string& file_name);
 void Shift(list<Line>* lines, int milliSeconds);
 void Shift(list<Line>* lines, int lineNumber, TimeStamp* correctTime);
+
+void Sync(list<Line>* lines, int beginLineNumber, int endLineNumber, TimeStamp* endCorrectTime);
