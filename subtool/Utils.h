@@ -7,7 +7,7 @@
 
 std::string ReadFileContents(std::string file_name);
 
-std::list<Line> FindMatches(const std::string& text);
+std::list<Line> ParseFileToLines(const std::string& text);
 
 void Shift(std::list<Line>& lines, int milliSeconds);
 void Shift(std::list<Line>& lines, int lineNumber, TimeStamp correctTime);

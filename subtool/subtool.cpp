@@ -6,11 +6,81 @@
 
 #include "TimeStamp.h"
 #include "Utils.h"
+#include <unistd.h>
 
+using std::cout;
+using std::string;
+using std::endl;
 
+void usage(char *argv0) {
+    cout << "Usage: " << argv0
+         << " [-l anchorLine]"
+         << " [-n syncMilliSeconds]"
+         << " [-s shiftMilliSeconds]"
+         << " [-t timeStamp]"
+         << " [-u]"
+         << " file"
+         << endl;
+         exit(0);
+}
 
 int main(int argc, char** argv)
 {
+    // extern char *optarg;
+    // extern int optind;
+    // extern int opterr;
+    // extern int optopt;
+
+    int opt;
+    bool doUtf = false;
+    bool doShift = false;
+    bool doSync = false;
+    int lineNumber;
+    TimeStamp* correctTime;
+
+    string timeStampCorrect;
+
+
+    while((opt = getopt(argc, argv, "l:nst:u")) != -1) {
+        switch(opt) {
+            case 'n':
+                doSync = true;
+                cout << "sync" << optarg << endl;
+                break;
+            case 'u':
+                doUtf = true;
+                cout << "utf-8 will be done" << endl;
+                break;
+            case 's':
+                doShift = true;
+                break;
+            case 'l':
+                lineNumber = atoi(optarg);
+                break;
+            case 't':
+                correctTime = new TimeStamp(optarg);
+                break;
+            default:
+                cout << "Error: invalid usage" << endl;
+                usage(argv[0]);
+                break;
+        }
+    }
+
+    if(optind >= argc) {
+        cout << "Error: missing argument" << endl;
+        usage(argv[0]);
+    }
+
+    string file_name = argv[optind];
+    
+    std::list<Line> lines = ParseFileToLines(file_name);
+
+    if(doShift) {
+        Shift(lines, lineNumber, (*correctTime));
+    }
+
+    delete correctTime;
 
     /*TimeStamp t1(121015) ;
     TimeStamp t2(120000);
@@ -19,12 +89,9 @@ int main(int argc, char** argv)
     std::cout << t1 << std::endl;
 
     return 0;*/
-    std::string file_name = argv[1];
-    std::string command = argv[2];
     
-    if (command == "shift") {
-        std::string contents = ReadFileContents(file_name);
-        std::list<Line> lines = FindMatches(contents);
+    
+        
         
         //int shiftAmount = std::stoi(argv[3]);
         //Shift(lines, shiftAmount);
@@ -32,11 +99,10 @@ int main(int argc, char** argv)
             std::cout << l;
         }*/
 
-        int lineNumber = std::stoi(argv[3]);
-        TimeStamp correctTime(argv[4]);
-        Shift(lines, lineNumber, correctTime);
+        
+        
 
-    }
+    
 
     //std::cout << contents << std::endl;
 
@@ -44,7 +110,7 @@ int main(int argc, char** argv)
     // std::cout << "t2 = " << t2.ToString() << std::endl;
     
 
-    std::cout << "Hello World!\n";
+    
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

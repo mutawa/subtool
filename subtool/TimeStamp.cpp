@@ -1,12 +1,16 @@
 #include "TimeStamp.h"
+using std::cout;
+using std::endl;
 
 
 int TimeStamp::operator - (const TimeStamp& other) {
     //TimeStamp temp(value - other.value);
     //temp.CalculateFromValue();
     //return temp;
+    //cout << "current " << value << " and other is " << other.value << " difference is " << (value - other.value) << endl;
     return value - other.value;
 }
+
 
 TimeStamp TimeStamp::operator + (const TimeStamp& other) {
     TimeStamp temp(value + other.value);
@@ -49,7 +53,7 @@ TimeStamp::TimeStamp() {
     hh = 0;
 }
 TimeStamp::TimeStamp(std::string time) {
-
+    
     std::string h = time.substr(0,2);
     std::string m = time.substr(3,2);
     std::string s = time.substr(6,2);

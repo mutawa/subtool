@@ -4,6 +4,9 @@
 #include <string>
 #include <regex>
 
+using std::cout;
+using std::endl;
+using std::string;
 
 std::string ReadFileContents(std::string file_path) {
     std::ifstream file;
@@ -19,7 +22,10 @@ std::string ReadFileContents(std::string file_path) {
     return contents;
 }
 
-std::list<Line> FindMatches(const std::string& text) {
+std::list<Line> ParseFileToLines(const std::string& file_name) {
+
+    std::string text = ReadFileContents(file_name);
+
     std::list<Line> lines;
     //std::regex reg("(\\d+)(?:\\r|\\n)+(\\d{2}:\\d{2}:\\d{2}.\\d{3}) --> (\\d{2}:\\d{2}:\\d{2}.\\d{3})(?:\\r|\\n)+(.*?)(?:\\r|\\n)+");
     std::regex reg("(\\d+)(?:\\r?\\n)(\\d{2}:\\d{2}:\\d{2}.\\d{3}) --> (\\d{2}:\\d{2}:\\d{2}.\\d{3})(?:\\r?\\n)([\\s\\S]*?)\\r?\\n\\r?\\n");
@@ -38,20 +44,22 @@ std::list<Line> FindMatches(const std::string& text) {
 
 }
 
-void Shift(std::list<Line>& lines, int milliSeconds)
+void ShiftLines(std::list<Line>& lines, const int& milliSeconds)
 {
+    cout << "shift all lines by " << milliSeconds << " let's go" << endl;
     for (auto& l : lines) {
+        
         l.Shift(milliSeconds);
     }
 }
 
 void Shift(std::list<Line>& lines, int lineNumber, TimeStamp correctTime)
 {
-    Line aLine;
+    Line* aLine;
     bool found = false;
-    for (auto const& l : lines) {
+    for (auto& l : lines) {
         if (l.lineNumber == lineNumber) {
-            aLine = l;
+            aLine = &l;
             found = true;
             break;
         }
@@ -59,16 +67,20 @@ void Shift(std::list<Line>& lines, int lineNumber, TimeStamp correctTime)
 
     // todo: check if found
     if (found) {
-        std::cout << "Timestamp of line " << lineNumber << " in file is " << aLine.from << std::endl;
-        int diff = correctTime - aLine.from;
+        cout << "correct time must be " << correctTime << endl;
+        std::cout << "Timestamp of line " << lineNumber << " in file is " << (*aLine).from << std::endl;
+        int diff = correctTime - (*aLine).from;
         if(diff == 0) {
             std::cout << "No shifting required";
         } else {
             TimeStamp shift(diff);
             // std::cout << "Shifting all lines by " << shift;  // todo: negative time displayed wrongly
             std::cout << "Shifting all lines by " << diff << " milliseconds." << std::endl;
-            Shift(lines, diff);
+            ShiftLines(lines, diff);
         }
 
+    }
+    else {
+        cout << "line [" << lineNumber << "] not found" << endl;
     }
 }
