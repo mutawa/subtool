@@ -133,7 +133,7 @@ int main(int argc, char** argv)
                 break;
             case 'm':
                 milliSecondsGiven = true;
-                milliSeconds = atoi(optarg);
+                milliSeconds = std::stoi(optarg);
                 break;
 
             case 'n':
@@ -180,11 +180,16 @@ int main(int argc, char** argv)
     std::list<Line> lines = ParseFileToLines(file_name);
 
     if(doShift) {
-        if(beginLineGiven) Shift(&lines, beginLineNumber, correctTime);
-        else {
-            cout << "beginLineNumber must be specified" << endl;
+        if(beginLineGiven) {
+            Shift(&lines, beginLineNumber, correctTime);
+
+        } else if (milliSecondsGiven) {
+            Shift(&lines, milliSeconds);
+        } else {
+            cout << "ERROR: [-s] must be used with either [-m milliSeconds] or ( [-b beginLineNumber] and [-c correctTimeStamp] )" << endl;
             usage(argv[0]);
         }
+        
     }
 
     if(doSync) {
@@ -205,7 +210,7 @@ int main(int argc, char** argv)
         
     }
 
-    WriteOutput(&lines, output_file);
+    WriteOutput(&lines, output_file, doUtf);
 
     delete correctTime;
 

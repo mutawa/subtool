@@ -2,6 +2,6 @@
 g++ -o bin/subtool subtool.cpp TimeStamp.cpp Utils.cpp Line.cpp
 if [ "$?" -eq 0 ]
 #    then bin/subtool ~/Downloads/village.srt shift 6 00:03:39,123
-    then bin/subtool -c 00:40:15,345 -n -b 4 -e 300 ~/Downloads/village.srt -o bin/ahmad.srt
+    then bin/subtool -s -m 400 ~/Downloads/vutf.srt -o bin/ahmad.srt
 fi
 
